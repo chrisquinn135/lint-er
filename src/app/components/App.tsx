@@ -1,7 +1,10 @@
 import React from 'react';
+import Button from './components/button'
+import TabBar from './nav/TabBar'
 import '../styles/ui.css';
+import { connect } from 'react-redux';
 
-function App() {
+function App(props) {
   const textbox = React.useRef<HTMLInputElement>(undefined);
 
   const countRef = React.useCallback((element: HTMLInputElement) => {
@@ -30,8 +33,9 @@ function App() {
 
   return (
     <div>
-      <img src={require('../assets/logo.svg')} />
-      <h2>Rectangle </h2>
+      <TabBar/>
+      <h2>TDS LINTER</h2>
+      {props.current}
       <p>
         Count: <input ref={countRef} />
       </p>
@@ -39,8 +43,14 @@ function App() {
         Create
       </button>
       <button onClick={onCancel}>Cancel</button>
+      <div style={{position:"fixed", bottom:'0px'}}><Button /></div>
+      <Button />
     </div>
   );
 }
 
-export default App;
+const mapStateToProps = (state) => {
+  return { current: state.nav.tab }
+}
+
+export default connect(mapStateToProps)(App);
