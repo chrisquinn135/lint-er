@@ -1,14 +1,10 @@
 import React from 'react'
+import '../../styles/components.css'
 
-const button_style = {
-  backgroundColor:'#004759',
-  color:'#ffffff',
-  padding: 8
-}
-const button = () => {
+const Button = () => {
   return (
-    <div style={button_style}>button</div>
+    <div className="button text-md-med">Run</div>
   )
 }
 
-export default button
+export default Button

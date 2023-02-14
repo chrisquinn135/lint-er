@@ -1,0 +1,33 @@
+.button {
+    border-radius: 8px;
+	padding: 8px 16px;
+    margin: 16px;
+    background-color:#004759;
+    color: #ffffff
+}
+
+.button:hover {
+    background-color: #C8EFE2;
+    color: #004759;
+}
+
+.tab {
+    padding: 16px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    gap: 8px;
+    color: #6c6c70;
+    border-bottom-style: solid;
+    border-color: #ffffff;
+    border-width: 2px;
+}
+
+.tab:hover {
+    color: #242426
+}
+
+.tab--state-active {
+    color: #242426;
+    border-color: #004759;
+}

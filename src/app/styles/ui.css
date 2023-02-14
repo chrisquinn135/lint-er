@@ -4,6 +4,10 @@ body {
   margin: 0;
 }
 
+.spacing-16 {
+  margin:24px;
+}
+
 .text-sm-reg {
   font: 12px sans-serif;
   font-weight: 400;

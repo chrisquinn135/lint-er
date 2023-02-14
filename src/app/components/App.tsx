@@ -1,8 +1,10 @@
 import React from 'react';
-import Button from './components/button'
+import Button from './components/Button';
 import TabBar from './nav/TabBar'
 import '../styles/ui.css';
+import '../styles/color.css';
 import { connect } from 'react-redux';
+import Default from './Default';
 
 function App(props) {
   const textbox = React.useRef<HTMLInputElement>(undefined);
@@ -34,17 +36,8 @@ function App(props) {
   return (
     <div>
       <TabBar/>
-      <h2>TDS LINTER</h2>
-      {props.current}
-      <p>
-        Count: <input ref={countRef} />
-      </p>
-      <button id="create" onClick={onCreate}>
-        Create
-      </button>
-      <button onClick={onCancel}>Cancel</button>
-      <div style={{position:"fixed", bottom:'0px'}}><Button /></div>
-      <Button />
+      <Default />
+      <div style={{position:"fixed", bottom:'0px', width:'100%'}}><Button /></div>
     </div>
   );
 }
