@@ -1,7 +1,6 @@
 .button {
     border-radius: 8px;
 	padding: 8px 16px;
-    margin: 16px;
     background-color:#004759;
     color: #ffffff
 }
@@ -11,8 +10,8 @@
     color: #004759;
 }
 
-.tab {
-    padding: 16px;
+.tabbar-tab {
+    padding: 16px 32px;
     display: flex;
     flex-direction: row;
     justify-content: center;
@@ -23,11 +22,28 @@
     border-width: 2px;
 }
 
-.tab:hover {
+.tabbar-tab:hover {
     color: #242426
 }
 
-.tab--state-active {
+.tabbar-tab--state-active {
     color: #242426;
     border-color: #004759;
+}
+
+.tabbar {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    border-bottom-style: solid;
+    border-color: #EBEBF0;
+    border-width: 1px;
+}
+
+.tag {
+    padding: 0px 12px;
+    background-color: #004759;
+    color: #ffffff;
+    border-radius: 16px;
+    align-self: center;
 }

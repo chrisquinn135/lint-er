@@ -3,15 +3,18 @@ import info from '../assets/info-illustration.png'
 
 const Default = () => {
   return (
-    <div className="spacing-16">
+    <div className="spacing-horizontal-16 body flexbox">
         <img src={info} style={{width:'40%'}} />
-        <h2>TDS Linter</h2>
-        <div className="spacing-16 color-text--state-secondary">
-            1. conconsectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
-        </div>
-        <div className="spacing-16 color-text--state-secondary">
-            2. consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
-        </div>
+        <div className="color-text--state-primary text-xl-semibold">TDS Linter</div>
+        <ol >
+          <li className="color-text--state-secondary">
+            What is a linter? It is used to calculate the amount of errors u have in ur design file! 
+          </li>
+          <li className="color-text--state-secondary">
+            Correct the errors and they disappear yay!
+          </li>
+        </ol>
+        
     </div>
   )
 }

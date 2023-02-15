@@ -1,13 +1,56 @@
+/* Body Structures */
 body {
   font: 12px sans-serif;
   text-align: center;
   margin: 0;
 }
 
-.spacing-16 {
-  margin:24px;
+.footer {
+  position: fixed;
+  bottom: 0px;
+  width: 100%;
 }
 
+.body {
+  text-align: left;
+  height: 76%;
+
+}
+
+/* List */
+ol {
+  margin: 0px 32px;
+  padding-inline-start: 16px;
+}
+
+ol li {
+  margin: 4px;
+}
+
+/* Dividers */
+hr.solid {
+  border-top:1px solid #EBEBF0;
+}
+
+/* Flexbox */
+.flexbox {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Spacings */
+.spacing-horizontal-16 {
+  margin:0px 16px;
+}
+
+.spacing-16 {
+  margin:16px;
+}
+
+/* Text */
 .text-sm-reg {
   font: 12px sans-serif;
   font-weight: 400;
@@ -26,6 +69,11 @@ body {
 .text-md-med {
   font: 14px sans-serif;
   font-weight: 500;
+}
+
+.text-xl-semibold {
+  font: 18px sans-serif;
+  font-weight: 700;
 }
 
 

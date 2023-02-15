@@ -6,38 +6,16 @@ import { connect } from 'react-redux';
 import '../../styles/components.css'
 
 
-// const tab_default_style = {
-//     padding: 16,
-//     display: 'flex',
-//     flexDirection: 'row' as 'row',
-//     justifyContent: 'center',
-//     gridGap: 8,
-//     color: "#6C6C70"
-// } as React.CSSProperties
-
-// const tab_is_active_style = {
-//     padding: 16,
-//     display: 'flex',
-//     flexDirection: 'row' as 'row',
-//     justifyContent: 'center',
-//     gridGap: 8,
-//     borderBottomStyle:'solid',
-//     borderColor: '#004759',
-//     borderWidth: 2, 
-    
-// } as React.CSSProperties
-
 const Tab = (props) => {
 
+  // used to switch tabs
   const dispatch = useDispatch();
-
   const onClickTab = () => {
-    console.log("TAB GOT CLICKED")
     dispatch(tabSwitch(props.title));
   }
 
   return (
-    <div className={props.current === props.title ? "text-md-med tab tab--state-active" : "text-md-med tab"} onClick={onClickTab}>
+    <div className={props.current === props.title ? "text-md-med tabbar-tab tabbar-tab--state-active" : "text-md-med tabbar-tab"} onClick={onClickTab}>
       {props.title} 
       <Tag numberOfError={props.numberOfError}/>
     </div>
