@@ -7,7 +7,7 @@ import { connect } from 'react-redux';
 import Default from './Default';
 import { useDispatch } from "react-redux";
 import {currentState} from '../redux/slice/errorSlice'
-import Error from './error/ErrorContainer'
+import Error from './error/ErrorSwitcher'
 
 
 function App(props) {

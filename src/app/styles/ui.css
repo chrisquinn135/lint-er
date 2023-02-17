@@ -32,11 +32,35 @@ hr.solid {
   border-top:1px solid #EBEBF0;
 }
 
+/* Borders */
+.border-round {
+  border-style: solid;
+  border-width: 1px;
+  border-color:#EBEBF0;
+  border-radius: 8px;
+}
+
 /* Flexbox */
 .flexbox {
   display: flex;
   flex-direction: column;
   justify-content: center;
+  align-items: center;
+  gap: 8px;
+}
+
+.flexbox-stretch {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: stretch;
+  gap: 8px;
+}
+
+.flexbox--right {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
   align-items: center;
   gap: 8px;
 }
@@ -47,7 +71,7 @@ hr.solid {
 }
 
 .spacing-16 {
-  margin:16px;
+  padding:16px;
 }
 
 /* Text */
@@ -57,7 +81,7 @@ hr.solid {
 }
 
 .text-sm-med {
-  font: 14px sans-serif;
+  font: 12px sans-serif;
   font-weight: 500;
 }
 
@@ -69,6 +93,16 @@ hr.solid {
 .text-md-med {
   font: 14px sans-serif;
   font-weight: 500;
+}
+
+.text-md-semibold {
+  font: 14px sans-serif;
+  font-weight: 700;
+}
+
+.text-lg-semibold {
+  font: 16px sans-serif;
+  font-weight: 700;
 }
 
 .text-xl-semibold {
