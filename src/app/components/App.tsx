@@ -11,23 +11,24 @@ import Error from './error/ErrorSwitcher'
 
 
 function App(props) {
-  // const textbox = React.useRef<HTMLInputElement>(undefined);
-  // const countRef = React.useCallback((element: HTMLInputElement) => {
-  //   if (element) element.value = '5';
-  //   textbox.current = element;
-  // }, []);
+  const textbox = React.useRef<HTMLInputElement>(undefined);
+  const countRef = React.useCallback((element: HTMLInputElement) => {
+    if (element) element.value = '5';
+    textbox.current = element;
+  }, []);
 
-  // const onCreate = () => {
-  //   const count = parseInt(textbox.current.value, 10);
-  //   parent.postMessage({ pluginMessage: { type: 'create-rectangles', count } }, '*');
-  // };
+  const onCreate = () => {
+    const count = 5;
+    parent.postMessage({ pluginMessage: { type: 'run', count } }, '*');
+  };
 
-  // const onCancel = () => {
-  //   parent.postMessage({ pluginMessage: { type: 'cancel' } }, '*');
-  // };
+  const onCancel = () => {
+    parent.postMessage({ pluginMessage: { type: 'cancel' } }, '*');
+  };
   const dispatch = useDispatch();
 
   const onClick = () => {
+    onCreate();
     dispatch(currentState());
   }
   React.useEffect(() => {

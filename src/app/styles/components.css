@@ -8,6 +8,7 @@
 .button:hover {
     background-color: #C8EFE2;
     color: #004759;
+    cursor: pointer;
 }
 
 .link {
@@ -16,6 +17,7 @@
 
 .link:hover {
     color: #169794;
+    cursor: pointer;
 }
 
 
@@ -32,7 +34,8 @@
 }
 
 .tabbar-tab:hover {
-    color: #242426
+    color: #242426;
+    cursor: pointer;
 }
 
 .tabbar-tab--state-active {
