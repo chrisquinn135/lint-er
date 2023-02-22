@@ -1,6 +1,9 @@
+@import url('https://fonts.googleapis.com/css2?family=Libre+Franklin:wght@400;500;600;700&display=swap');
+
 /* Body Structures */
 body {
   font: 12px sans-serif;
+  font-family: 'Libre Franklin', 'cursive';
   text-align: center;
   margin: 0;
 }
@@ -112,17 +115,17 @@ hr.solid {
 
 .text-md-semibold {
   font: 14px sans-serif;
-  font-weight: 700;
+  font-weight: 600;
 }
 
 .text-lg-semibold {
   font: 16px sans-serif;
-  font-weight: 700;
+  font-weight: 600;
 }
 
 .text-xl-semibold {
   font: 18px sans-serif;
-  font-weight: 700;
+  font-weight: 600;
 }
 
 
