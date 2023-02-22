@@ -1,28 +1,37 @@
 import React from 'react'
 import Link from '../components/Link'
-import { useDispatch } from 'react-redux'
-import {ignoreError} from '../../redux/slice/errorSlice'
+import { useDispatch, connect } from 'react-redux'
+import {ignoreError, focus} from '../../redux/slice/errorSlice'
 
-const ErrorBox = ({title,message,id}) => {
+const ErrorBox = (props) => {
 
   const dispatch = useDispatch();
   const onClick = () => {
-      dispatch(ignoreError(id))
+      dispatch(ignoreError(props.id))
+  }
+
+  const focusError = () => {
+    dispatch(focus(props.id))
+    parent.postMessage({ pluginMessage: { type: 'focus', id: props.id } }, '*');
   }
 
   return (
-    <div className='spacing-16 border-round flexbox-stretch'>
+    <div className={props.id == props.is_focus ? 'spacing-16 border-round--focus flexbox-stretch' : 'spacing-16 border-round flexbox-stretch'} onClick={focusError}>
         <div className='flexbox--right'>
             <div className='text-md-semibold'>
-                {title}
+                {props.name}
             </div>
             <Link title={"Ignore"} onClick={onClick}/>
         </div>
         <div className="color-text--state-secondary text-sm-reg">
-            {message}
+            {props.type}
         </div>
     </div>
-  )
+  ) 
 }
 
-export default ErrorBox
+const mapStateToProps = (state) => {
+    return { is_focus: state.error.focus }
+}
+
+export default connect(mapStateToProps)(ErrorBox)

@@ -2,13 +2,19 @@ import { createSlice } from '@reduxjs/toolkit'
 
 const navSlice = createSlice({
   name: 'nav',
-  initialState: {current_tab: "Font"},
+  initialState: {current_tab: "Color", loading: false},
   reducers: {
     tabSwitch(state, action) {
       state.current_tab = action.payload
+    },
+    loadingStart(state) {
+      state.loading = true
+    },
+    loadingEnd(state) {
+      state.loading = false
     }
   }
 })
 
-export const { tabSwitch } = navSlice.actions
+export const { tabSwitch, loadingStart, loadingEnd } = navSlice.actions
 export default navSlice.reducer

@@ -9,6 +9,7 @@ body {
   position: fixed;
   bottom: 0px;
   width: 100%;
+  background-color: #FFFFFF
 }
 
 .body {
@@ -30,6 +31,7 @@ ol li {
 /* Dividers */
 hr.solid {
   border-top:1px solid #EBEBF0;
+  margin:0px;
 }
 
 /* Borders */
@@ -38,6 +40,19 @@ hr.solid {
   border-width: 1px;
   border-color:#EBEBF0;
   border-radius: 8px;
+}
+
+.border-round--focus {
+  border-style: solid;
+  border-width: 1px;
+  border-color:#03A1C7;
+  background-color: #F9F9FF;
+  border-radius: 8px;
+}
+
+.border-round:hover {
+  border-color: #BCBCC0;
+  background-color: #F9F9FF;
 }
 
 /* Flexbox */

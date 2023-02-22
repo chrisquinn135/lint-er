@@ -4,13 +4,12 @@ import ErrorBox from './ErrorBox'
 
 const ErrorContainer = (props) => {
   return (
-    <div className='spacing-16 flexbox-stretch'>
+    <div className='spacing-16 flexbox-stretch' style={{overflowY:'scroll', height:'75vh',justifyContent:'flex-start'}}>
       {props.errorList.map((error) =>
-        !error.status ?
-          <ErrorBox title={error.title} message={error.message} id={error.id} />
+        !error.status && error.type == props.tab ?
+          <ErrorBox type={error.type} name={error.name} id={error.id} />
           : ""
       )}
-
     </div>
   )
 }

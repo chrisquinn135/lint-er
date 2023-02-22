@@ -1,15 +1,22 @@
 import React from 'react'
 import Tab from '../components/Tab'
+import { connect } from 'react-redux'
 
-const TabBar = () => {
+const TabBar = (props) => {
   return (
     <div className='tabbar'>
 
       {/* currently hard coded */}
-      <Tab numberOfError={0} title={"Font"}/> 
-      <Tab numberOfError={0} title={"Color"}/> 
+      <Tab numberOfError={props.color} title={"Color"}/> 
+      <Tab numberOfError={"N/A"} title={"Font"}/> 
+      
     </div>
   )
 }
 
-export default TabBar
+// get counters
+const mapStateToProps = (state) => {
+  return { color: state.error.color, font: state.error.font }
+}
+
+export default connect(mapStateToProps)(TabBar)

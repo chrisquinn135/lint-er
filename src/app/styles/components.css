@@ -44,12 +44,13 @@
 }
 
 .tabbar {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-around;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
     border-bottom-style: solid;
     border-color: #EBEBF0;
     border-width: 1px;
+    justify-items: center;
+    align-items: center;
 }
 
 .tag {

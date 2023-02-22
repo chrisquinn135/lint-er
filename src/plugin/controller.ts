@@ -1,38 +1,11 @@
 import colors from "../criteria/color.json"
 
 figma.showUI(__html__);
+figma.skipInvisibleInstanceChildren = true;
 figma.ui.resize(400, 600);
 
-// figma.ui.onmessage = (msg) => {
-
-//   if (msg.type === 'create-rectangles') {
-//     const nodes = [];
-
-//     for (let i = 0; i < msg.count; i++) {
-//       const rect = figma.createRectangle();
-//       rect.x = i * 150;
-//       rect.fills = [{ type: 'SOLID', color: color.color[0] }];
-//       figma.currentPage.appendChild(rect);
-//       nodes.push(rect);
-//     }
-
-//     figma.currentPage.selection = nodes;
-//     figma.viewport.scrollAndZoomIntoView(nodes);
-
-//     // This is how figma responds back to the ui
-//     figma.ui.postMessage({
-//       type: 'create-rectangles',
-//       message: `Created ${msg.count} Rectangles`,
-//     });
-//   }
-
-//   figma.closePlugin();
-// };
-
-// stores node w/ style error
-
 let nodeError: any = 0;
-
+let errorList: any = [];
 // stores skipped nodes
 const skipNode: SceneNode[] = [];
 
@@ -45,18 +18,26 @@ figma.ui.onmessage = (msg) => {
 
   //const node = figma.currentPage.selection
 
+  // reset error list
+  errorList = []
   // run check if run is hit
   if (msg.type === 'run') {
     check();
   }
 
-  if (msg.type === 'skip') {
-    for (let node of figma.currentPage.selection) {
-      skipNode.push(node);
-      checkSkip(node);
-    }
-    check();
+  // focus error
+  if (msg.type === 'focus') {
+    console.log("FOCUS")
+    focus(msg.id)
   }
+
+  // if (msg.type === 'skip') {
+  //   for (let node of figma.currentPage.selection) {
+  //     skipNode.push(node);
+  //     checkSkip(node);
+  //   }
+  //   check();
+  // }
 };
 
 // check color
@@ -65,10 +46,12 @@ function colorCheck(object2) {
   let result = false;
   // go through every color
   colors.color.forEach((color) => {
-    if (color.r.toFixed(5) == object2.r.toFixed(5) && color.b.toFixed(5) == object2.b.toFixed(5) && color.g.toFixed(5) == object2.g.toFixed(5)) {
+    if (object2.r == undefined) {
+    } else if (color.r.toFixed(5) == object2.r.toFixed(5) && color.b.toFixed(5) == object2.b.toFixed(5) && color.g.toFixed(5) == object2.g.toFixed(5)) {
       result = true
     }
   })
+
   // return the result of the for-each
   if (result) {
     return true
@@ -77,27 +60,50 @@ function colorCheck(object2) {
   }
 }
 
+// traverse through the node
 function traverse(node: any) {
   // if no error node, run
-  if (nodeError == 0) {
     if ('children' in node) {
-      if (node.type !== 'INSTANCE') {
+      // if (node.type !== 'INSTANCE') {
+        if(typeof node.fills == "object") {
+          let result = false
+          node.fills.forEach(fill => {
+            if(fill.type != "SOLID") {
+              if (!colorCheck(fill.color)) {
+                result = true
+              }
+            }
+            
+          })
+          // if the color is not matching, add it to the array
+          if (result) {
+            errorList.push({id: node.id, type: "Color", name: node.name, status: false});
+          }
+        }
         for (const child of node.children) {
           traverse(child);
         }
-      }
+      // }
     } else {
-      console.log(node)
-
+      // console.log(node)
       // check fills
-      node.fills.forEach(fill => {
-        console.log("CHECK")
-        if (!colorCheck(fill.color)) {
-          nodeError = node
-        } else {
-          console.log(" NO ERRORS !")
+      if(typeof node.fills == "object") {
+        let result = false
+        node.fills.forEach(fill => {
+          if(fill.type == "SOLID") {
+            if (!colorCheck(fill.color)) {
+              result = true
+            }
+          }
+          
+        })
+        // if the color is not matching, add it to the array
+        if (result) {
+          // console.log(node.fills[0].color)
+          errorList.push({id: node.id, type: "Color", name: node.name, status: false});
         }
-      })
+      }
+      
     }
     // if (node.type !== 'TEXT') {
     //     if ('children' in node) {
@@ -114,33 +120,46 @@ function traverse(node: any) {
     //         nodeError = node;
     //     }
     // }
-  }
 }
 
 function check() {
   // What is SceneNode[]
-  const nodes: SceneNode[] = [];
-
+  // const nodes: SceneNode[] = [];
   //let errorNode = traverse(figma.currentPage)
   traverse(figma.currentPage);
+  figma.ui.postMessage(errorList)
+
 
   // if there is an error
-  if (nodeError != 0) {
-    let nodeSelection = nodeError;
-    nodes.push(nodeSelection);
-    figma.currentPage.selection = nodes;
-    figma.viewport.scrollAndZoomIntoView(nodes);
-    nodeError = 0;
-  } else {
-    figma.notify('NO ERRORS');
+  // if (nodeError != 0) {
+  //   let nodeSelection = nodeError;
+  //   nodes.push(nodeSelection);
+  //   figma.currentPage.selection = nodes;
+  //   figma.viewport.scrollAndZoomIntoView(nodes);
+  //   figma.ui.postMessage(errorList)
+  //   nodeError = 0;
+  // } else {
+  //   figma.notify('NO ERRORS');
+  // }
+}
+
+// function checkSkip(node: any) {
+//   for (let current of skipNode) {
+//     if (node === current) {
+//       return false;
+//     }
+//   }
+//   return true;
+// }
+
+function focus(id) {
+  const node = figma.currentPage.findOne(n => n.id === id);
+  if (node) {
+      const nodes: SceneNode[] = [];
+      nodes.push(node)
+      figma.currentPage.selection = nodes;
+      figma.viewport.scrollAndZoomIntoView(nodes);
   }
 }
 
-function checkSkip(node: any) {
-  for (let current of skipNode) {
-    if (node === current) {
-      return false;
-    }
-  }
-  return true;
-}
+figma.on("documentchange", () => {check()})
