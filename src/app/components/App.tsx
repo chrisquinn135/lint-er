@@ -28,7 +28,7 @@ function App(props) {
     <div>
       <TabBar/>
       {props.did_run ? <Error /> : <Default/>}
-      {props.did_run ? "" : <Footer/>}
+      <Footer/>
       {/* <div className="footer">
         <hr className="solid divider"/>
         <div className="spacing-16">

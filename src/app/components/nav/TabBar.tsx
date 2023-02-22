@@ -8,7 +8,7 @@ const TabBar = (props) => {
 
       {/* currently hard coded */}
       <Tab numberOfError={props.color} title={"Color"}/> 
-      <Tab numberOfError={"N/A"} title={"Font"}/> 
+      <Tab numberOfError={props.font} title={"Font"}/> 
       
     </div>
   )

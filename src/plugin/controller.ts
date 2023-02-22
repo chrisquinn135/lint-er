@@ -1,25 +1,17 @@
 import colors from "../criteria/color.json"
+import fonts from '../criteria/font.json'
 
 figma.showUI(__html__);
 figma.skipInvisibleInstanceChildren = true;
 figma.ui.resize(400, 600);
 
-let nodeError: any = 0;
 let errorList: any = [];
-// stores skipped nodes
-const skipNode: SceneNode[] = [];
 
-// Calls to "parent.postMessage" from within the HTML page will trigger this
-// callback. The callback will be passed the "pluginMessage" property of the
-// posted message.
 figma.ui.onmessage = (msg) => {
   // One way of distinguishing between different types of messages sent from
   // your HTML page is to use an object with a "type" property like this.
 
-  //const node = figma.currentPage.selection
-
   // reset error list
-  errorList = []
   // run check if run is hit
   if (msg.type === 'run') {
     check();
@@ -27,7 +19,6 @@ figma.ui.onmessage = (msg) => {
 
   // focus error
   if (msg.type === 'focus') {
-    console.log("FOCUS")
     focus(msg.id)
   }
 
@@ -60,72 +51,84 @@ function colorCheck(object2) {
   }
 }
 
+// color check 
+function is_wrong_color(node: any) {
+  let result = false
+  node.fills.forEach(fill => {
+    if (fill.type == "SOLID") {
+      if (!colorCheck(fill.color)) {
+        result = true
+      }
+    }
+
+  })
+  // if the color is not matching, add it to the array
+  if (result) {
+    errorList.push({ id: node.id, type: "Color", name: node.name, status: false });
+  }
+}
+
+function is_wrong_font(node: any) {
+  let result = false
+  fonts.font.forEach(element => {
+    if(node.fontName.family == "Font Awesome 6 Pro" || (element.family == node.fontName.family && element.style == node.fontName.style && element.size == node.fontSize)) {
+      result = true
+    }
+  });
+  if (!result) {
+    console.log(node.fontName.family)
+    console.log(node.fontName.style)
+    console.log(node.fontSize)
+    errorList.push({ id: node.id, type: "Font", name: node.name, status: false });
+  }
+}
 // traverse through the node
 function traverse(node: any) {
   // if no error node, run
-    if ('children' in node) {
-      // if (node.type !== 'INSTANCE') {
-        if(typeof node.fills == "object") {
-          let result = false
-          node.fills.forEach(fill => {
-            if(fill.type != "SOLID") {
-              if (!colorCheck(fill.color)) {
-                result = true
-              }
-            }
-            
-          })
-          // if the color is not matching, add it to the array
-          if (result) {
-            errorList.push({id: node.id, type: "Color", name: node.name, status: false});
-          }
-        }
-        for (const child of node.children) {
-          traverse(child);
-        }
-      // }
-    } else {
-      // console.log(node)
-      // check fills
-      if(typeof node.fills == "object") {
-        let result = false
-        node.fills.forEach(fill => {
-          if(fill.type == "SOLID") {
-            if (!colorCheck(fill.color)) {
-              result = true
-            }
-          }
-          
-        })
-        // if the color is not matching, add it to the array
-        if (result) {
-          // console.log(node.fills[0].color)
-          errorList.push({id: node.id, type: "Color", name: node.name, status: false});
-        }
-      }
-      
+  if ('children' in node) {
+    // if (node.type !== 'INSTANCE') {
+    if (typeof node.fills == "object") {
+      is_wrong_color(node)
     }
-    // if (node.type !== 'TEXT') {
-    //     if ('children' in node) {
-    //         if (node.type !== 'INSTANCE') {
-    //             for (const child of node.children) {
-    //                 traverse(child);
-    //             }
-    //         }
-    //     }
-    // } else {
-    //     console.log(node);
-    //     // console.log(sf_pro);
-    //     if (node.textStyleId === '' && checkSkip(node)) {
-    //         nodeError = node;
-    //     }
+    if (node.type == "textnode") {
+      is_wrong_font(node)
+    }
+    for (const child of node.children) {
+      traverse(child);
+    }
     // }
+  } else {
+    // console.log(node)
+    // check fills
+    if (typeof node.fills == "object") {
+      is_wrong_color(node)
+    }
+    if (node.type == "TEXT") {
+      is_wrong_font(node)
+    }
+  }
+  // if (node.type !== 'TEXT') {
+  //     if ('children' in node) {
+  //         if (node.type !== 'INSTANCE') {
+  //             for (const child of node.children) {
+  //                 traverse(child);
+  //             }
+  //         }
+  //     }
+  // } else {
+  //     console.log(node);
+  //     // console.log(sf_pro);
+  //     if (node.textStyleId === '' && checkSkip(node)) {
+  //         nodeError = node;
+  //     }
+  // }
 }
 
 function check() {
   // What is SceneNode[]
   // const nodes: SceneNode[] = [];
   //let errorNode = traverse(figma.currentPage)
+  errorList = []
   traverse(figma.currentPage);
   figma.ui.postMessage(errorList)
 
@@ -155,11 +158,11 @@ function check() {
 function focus(id) {
   const node = figma.currentPage.findOne(n => n.id === id);
   if (node) {
-      const nodes: SceneNode[] = [];
-      nodes.push(node)
-      figma.currentPage.selection = nodes;
-      figma.viewport.scrollAndZoomIntoView(nodes);
+    const nodes: SceneNode[] = [];
+    nodes.push(node)
+    figma.currentPage.selection = nodes;
+    figma.viewport.scrollAndZoomIntoView(nodes);
   }
 }
 
-figma.on("documentchange", () => {check()})
+figma.on("documentchange", () => { check() })
