@@ -2,7 +2,7 @@ import React from 'react'
 import clear from '../../assets/clear-illustration.png'
 
 
-const Loading = (props) => {
+const Loading = () => {
   return (
     <div className="spacing-horizontal-16 body flexbox">
         <img src={clear} style={{width:'40%'}} />

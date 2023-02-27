@@ -18,7 +18,6 @@ function App(props) {
   React.useEffect(() => {
     // This is how we read messages sent from the plugin controller
     window.onmessage = (event) => {
-      console.log("HIT")
       dispatch(loadingEnd())
       dispatch(updateError(event.data.pluginMessage))
     };

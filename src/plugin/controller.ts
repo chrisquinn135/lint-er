@@ -1,41 +1,127 @@
 import colors from "../criteria/color.json"
 import fonts from '../criteria/font.json'
 
+// global enables
 figma.showUI(__html__);
 figma.skipInvisibleInstanceChildren = true;
 figma.ui.resize(400, 600);
 
+// global variables
 let errorList: any = [];
+let idList: any = []
+let START: boolean = false;
+
+// universal function: on page edit, run universal checker
+figma.on("documentchange", () => {
+  if (START) {
+    for (const node of figma.currentPage.selection) {
+      if (idList.includes(node.id)) {
+        check()
+      }
+    }
+  }
+}
+)
 
 figma.ui.onmessage = (msg) => {
-  // One way of distinguishing between different types of messages sent from
-  // your HTML page is to use an object with a "type" property like this.
-
-  // reset error list
-  // run check if run is hit
+  // run message: check for errors throughout page
   if (msg.type === 'run') {
+    START = true;
     check();
   }
 
-  // focus error
+  // focus message: focus on a specific error on the page
   if (msg.type === 'focus') {
     focus(msg.id)
   }
-
-  // if (msg.type === 'skip') {
-  //   for (let node of figma.currentPage.selection) {
-  //     skipNode.push(node);
-  //     checkSkip(node);
-  //   }
-  //   check();
-  // }
 };
 
+//  *********************************************
+//  ********** Error Checker Feature ************
+//  *********************************************
+
+// traverse through the nodes & call error-checking functions
+function traverse(node: any) {
+  if ('children' in node) {
+    error_check(node)
+    for (const child of node.children) {
+      traverse(child);
+    }
+  } else {
+    error_check(node)
+  }
+}
+
+// universal run function for checking for errors
+function check() {
+  errorList = []
+  idList = []
+  traverse(figma.currentPage);
+  figma.ui.postMessage(errorList)
+}
+
+// helper function that combines the color & font checkers into one
+function error_check(node: any) {
+  if (typeof node.fills == "object") {
+    is_wrong_color(node)
+  }
+  if (node.type == "TEXT") {
+    is_wrong_font(node)
+  }
+  if(node.strokes) {
+    is_wrong_stroke(node)
+  }
+}
+
+// color error -> error list function
+function is_wrong_color(node: any) {
+
+  // result variable
+  let result = false
+
+  node.fills.forEach(fill => {
+    if (fill.type == "SOLID") {
+      if (!color_helper(fill.color)) {
+        result = true
+      }
+    }
+  })
+
+  // if the color is not matching, add it to the error-list
+  if (result) {
+    errorList.push({ id: node.id, type: "Color", desc: "Fill color", name: node.name, status: false });
+    idList.push(node.id)
+  }
+}
+
+// color error -> error list function
+function is_wrong_stroke(node: any) {
+
+  // result variable
+  let result = false
+
+  node.strokes.forEach(stroke => {
+    if (stroke.type == "SOLID") {
+      if (!color_helper(stroke.color)) {
+        result = true
+      }
+    }
+  })
+
+  // if the color is not matching, add it to the error-list
+  if (result) {
+    errorList.push({ id: node.id, type: "Color",desc: "Stroke color", name: node.name, status: false });
+    idList.push(node.id)
+  }
+}
+
 // check color
-function colorCheck(object2) {
-  // result check
+function color_helper(object2) {
+
+  // result variable
   let result = false;
-  // go through every color
+
+  // go through every color in colors.json
   colors.color.forEach((color) => {
     if (object2.r == undefined) {
     } else if (color.r.toFixed(5) == object2.r.toFixed(5) && color.b.toFixed(5) == object2.b.toFixed(5) && color.g.toFixed(5) == object2.g.toFixed(5)) {
@@ -43,118 +129,35 @@ function colorCheck(object2) {
     }
   })
 
-  // return the result of the for-each
-  if (result) {
-    return true
-  } else {
-    return false
-  }
+  // return the result variable
+  return result;
 }
 
-// color check 
-function is_wrong_color(node: any) {
-  let result = false
-  node.fills.forEach(fill => {
-    if (fill.type == "SOLID") {
-      if (!colorCheck(fill.color)) {
-        result = true
-      }
-    }
-
-  })
-  // if the color is not matching, add it to the array
-  if (result) {
-    errorList.push({ id: node.id, type: "Color", name: node.name, status: false });
-  }
-}
-
+// font error -> error list function
 function is_wrong_font(node: any) {
+
+  // result variable
   let result = false
+
+  // go through fonts.json
   fonts.font.forEach(element => {
-    if(node.fontName.family == "Font Awesome 6 Pro" || (element.family == node.fontName.family && element.style == node.fontName.style && element.size == node.fontSize)) {
+    if (node.fontName.family == "Font Awesome 6 Pro" || (element.family == node.fontName.family && element.style == node.fontName.style && element.size == node.fontSize)) {
       result = true
     }
   });
+
+  // if the font is not matching, add it to the error-list
   if (!result) {
-    console.log(node.fontName.family)
-    console.log(node.fontName.style)
-    console.log(node.fontSize)
-    errorList.push({ id: node.id, type: "Font", name: node.name, status: false });
+    errorList.push({ id: node.id, type: "Font", desc: "Font", name: node.name, status: false });
+    idList.push(node.id)
   }
 }
-// traverse through the node
-function traverse(node: any) {
-  // if no error node, run
-  if ('children' in node) {
-    // if (node.type !== 'INSTANCE') {
-    if (typeof node.fills == "object") {
-      is_wrong_color(node)
-    }
-    if (node.type == "textnode") {
-      is_wrong_font(node)
-    }
-    for (const child of node.children) {
-      traverse(child);
-    }
-    // }
-  } else {
-    // console.log(node)
-    // check fills
-    if (typeof node.fills == "object") {
-      is_wrong_color(node)
-    }
-    if (node.type == "TEXT") {
-      is_wrong_font(node)
-    }
-  }
-  // if (node.type !== 'TEXT') {
-  //     if ('children' in node) {
-  //         if (node.type !== 'INSTANCE') {
-  //             for (const child of node.children) {
-  //                 traverse(child);
-  //             }
-  //         }
-  //     }
-  // } else {
-  //     console.log(node);
-  //     // console.log(sf_pro);
-  //     if (node.textStyleId === '' && checkSkip(node)) {
-  //         nodeError = node;
-  //     }
-  // }
-}
 
-function check() {
-  // What is SceneNode[]
-  // const nodes: SceneNode[] = [];
-  //let errorNode = traverse(figma.currentPage)
-  errorList = []
-  traverse(figma.currentPage);
-  figma.ui.postMessage(errorList)
+//  *************************************
+//  ********** Focus Feature ************
+//  *************************************
 
-
-  // if there is an error
-  // if (nodeError != 0) {
-  //   let nodeSelection = nodeError;
-  //   nodes.push(nodeSelection);
-  //   figma.currentPage.selection = nodes;
-  //   figma.viewport.scrollAndZoomIntoView(nodes);
-  //   figma.ui.postMessage(errorList)
-  //   nodeError = 0;
-  // } else {
-  //   figma.notify('NO ERRORS');
-  // }
-}
-
-// function checkSkip(node: any) {
-//   for (let current of skipNode) {
-//     if (node === current) {
-//       return false;
-//     }
-//   }
-//   return true;
-// }
-
+// focus function
 function focus(id) {
   const node = figma.currentPage.findOne(n => n.id === id);
   if (node) {
@@ -164,5 +167,3 @@ function focus(id) {
     figma.viewport.scrollAndZoomIntoView(nodes);
   }
 }
-
-figma.on("documentchange", () => { check() })

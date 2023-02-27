@@ -24,7 +24,7 @@ const ErrorBox = (props) => {
             <Link title={"Ignore"} onClick={onClick}/>
         </div>
         <div className="color-text--state-secondary text-sm-reg">
-            {props.type}
+            {props.desc}
         </div>
     </div>
   ) 

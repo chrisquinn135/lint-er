@@ -51,11 +51,14 @@ hr.solid {
   border-color:#03A1C7;
   background-color: #F9F9FF;
   border-radius: 8px;
+  transition: all 500ms;
+
 }
 
 .border-round:hover {
   border-color: #BCBCC0;
   background-color: #F9F9FF;
+  transition: all 200ms;
 }
 
 /* Flexbox */

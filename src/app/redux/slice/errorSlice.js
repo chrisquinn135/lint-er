@@ -15,7 +15,6 @@ const errorSlice = createSlice({
             state.did_run = 1
         },
         ignoreError(state, action) {
-            console.log("Ignore")
             let newErrorList = []
             // keep track of the ignored items
             state.errorList.forEach(element => {
@@ -29,8 +28,6 @@ const errorSlice = createSlice({
                     newErrorList = state.errorList.filter(el => el.id != element.id);
                 }
             });
-            // remove it from the og list
-            console.log(newErrorList.length)
             // update list
             state.errorList = newErrorList;
             state.focus = ""
