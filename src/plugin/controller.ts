@@ -1,5 +1,9 @@
 import colors from "../criteria/color.json"
 import fonts from '../criteria/font.json'
+import sf_font_json from '../criteria/fontSF.json'
+import rb_font_json from '../criteria/fontRB.json'
+import lf_font_json from '../criteria/fontLF.json'
+
 
 // global enables
 figma.showUI(__html__);
@@ -10,6 +14,10 @@ figma.ui.resize(400, 600);
 let errorList: any = [];
 let idList: any = []
 let START: boolean = false;
+let font_lf: any = false;
+let font_sf: any = false;
+let font_rb: any = false;
+
 
 // universal function: on page edit, run universal checker
 figma.on("documentchange", () => {
@@ -33,6 +41,17 @@ figma.ui.onmessage = (msg) => {
   // focus message: focus on a specific error on the page
   if (msg.type === 'focus') {
     focus(msg.id)
+  }
+
+  // font checkers
+  if (msg.type === 'lf') {
+    font_lf = !font_lf
+  }
+  if (msg.type === 'sf') {
+    font_sf = !font_sf
+  }
+  if (msg.type === 'rb') {
+    font_rb = !font_rb
   }
 };
 

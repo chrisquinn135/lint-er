@@ -15,10 +15,15 @@ const MenuItem = (props) => {
     const onClick = () => {
         if(props.type == 'Libre Franklin') {
             dispatch(lf())
+            parent.postMessage({ pluginMessage: { type: 'lf'} }, '*');
         } else if (props.type == 'SF Pro') {
             dispatch(sf())
+            parent.postMessage({ pluginMessage: { type: 'sf'} }, '*');
+
         } else {
             dispatch(rb())
+            parent.postMessage({ pluginMessage: { type: 'rb'} }, '*');
+
         }
     }
 
