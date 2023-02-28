@@ -1,12 +1,13 @@
 import React from 'react';
 import Button from './components/Button';
+import Setting from './components/Setting';
 import '../styles/ui.css';
 import '../styles/color.css';
-import {useDispatch} from "react-redux";
-import {currentState, updateError} from '../redux/slice/errorSlice'
-import {loadingStart, loadingEnd} from '../redux/slice/navSlice'
+import {useDispatch, connect} from "react-redux";
+import {currentState, updateError,ignore} from '../redux/slice/errorSlice'
+import {loadingStart, loadingEnd, setting} from '../redux/slice/navSlice'
 
-const Footer = () => {
+const Footer = (props) => {
     
     const dispatch = useDispatch();
 
@@ -26,6 +27,14 @@ const Footer = () => {
         dispatch(currentState());
     }
 
+    const ignoreClick = () => {
+        dispatch(ignore())
+    }
+
+    const settingClick = () => {
+        dispatch(setting())
+    }
+
     React.useEffect(() => { // This is how we read messages sent from the plugin controller
         window.onmessage = (event) => {
             dispatch(loadingEnd())
@@ -35,10 +44,18 @@ const Footer = () => {
 
     return (<div className="footer">
         <hr className="solid divider"/>
-        <div className="spacing-16">
-            <Button onClick={onClick}/>
+        {props.setting && <Setting />}
+        {props.setting && <hr className='setting' style={{marginLeft: '16px', marginRight: '16px'}} />}
+        <div className="spacing-16 footer-contents">
+            <Button onClick={ignoreClick} title={'Reset Ignore'} type={'tertiary'}/>
+            <Button onClick={settingClick} title={'Settings'} type={'tertiary'}/>
+            <Button onClick={onClick} title={'Run'} type={'primary'}/>
         </div>
     </div>)
 }
 
-export default Footer;
+const mapStateToProps = (state) => {
+    return { setting: state.nav.setting }
+  }
+
+export default connect(mapStateToProps)(Footer);

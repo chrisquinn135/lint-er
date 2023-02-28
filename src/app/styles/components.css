@@ -1,4 +1,4 @@
-.button {
+.button-primary {
     border-radius: 8px;
 	padding: 8px 16px;
     background-color:#004759;
@@ -8,7 +8,7 @@
     animation-direction: reverse; */
 }
 
-.button:hover {
+.button-primary:hover {
     background-color: #C8EFE2;
     animation-name: on-hover-button;
     animation-duration: 100ms;
@@ -19,6 +19,17 @@
 @keyframes on-hover-button {
     0%   {background-color: #004759;}
     100%  {background-color: #C8EFE2;}
+}
+
+.button-tertiary {
+    border-radius: 8px;
+    color: #004759;
+    cursor: pointer;
+
+}
+
+.button-tertiary:hover {
+    color: #169794;
 }
 
 .link {
@@ -149,3 +160,16 @@ select {
     border-radius: 4px;
     background-color: #f1f1f1;
   }
+
+.setting-font {
+    border-style: solid;
+    border-width: 1px;
+    border-color:#EBEBF0;
+    border-radius: 8px;
+    background-color: #F9F9FF;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: stretch;
+    gap: 16px;
+}

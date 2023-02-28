@@ -2,7 +2,7 @@
 
 /* Body Structures */
 body {
-  font: 12px sans-serif;
+  font: 12px 'Libre Franklin';
   font-family: 'Libre Franklin', 'cursive';
   text-align: center;
   margin: 0;
@@ -13,6 +13,18 @@ body {
   bottom: 0px;
   width: 100%;
   background-color: #FFFFFF
+}
+
+.header {
+  text-align: left;
+}
+
+.footer-contents {
+  display: flex;
+  flex-direction: row;
+  justify-content: right;
+  align-items: center;
+  gap: 16px;
 }
 
 .body {
@@ -33,8 +45,21 @@ ol li {
 
 /* Dividers */
 hr.solid {
-  border-top:1px solid #EBEBF0;
-  margin:0px;
+  display: block;
+  height: 1px;
+  border: 0;
+  border-top: 1px solid #EBEBF0;
+  margin: 0px;
+  padding: 0;
+}
+
+hr.setting {
+  display: block;
+  height: 1px;
+  border: 0;
+  border-top: 1px solid #EBEBF0;
+  margin: 0px;
+  padding: 0;
 }
 
 /* Borders */
@@ -97,37 +122,37 @@ hr.solid {
 
 /* Text */
 .text-sm-reg {
-  font: 12px sans-serif;
+  font: 12px 'Libre Franklin';
   font-weight: 400;
 }
 
 .text-sm-med {
-  font: 12px sans-serif;
+  font: 12px 'Libre Franklin';
   font-weight: 500;
 }
 
 .text-md-reg {
-  font: 14px sans-serif;
+  font: 14px 'Libre Franklin';
   font-weight: 400;
 }
 
 .text-md-med {
-  font: 14px sans-serif;
+  font: 14px 'Libre Franklin';
   font-weight: 500;
 }
 
 .text-md-semibold {
-  font: 14px sans-serif;
-  font-weight: 600;
+  font: 14px 'Libre Franklin';
+  font-weight: 500;
 }
 
 .text-lg-semibold {
-  font: 16px sans-serif;
+  font: 16px 'Libre Franklin';
   font-weight: 600;
 }
 
 .text-xl-semibold {
-  font: 18px sans-serif;
+  font: 18px 'Libre Franklin';
   font-weight: 600;
 }
 

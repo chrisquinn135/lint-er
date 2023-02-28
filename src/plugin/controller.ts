@@ -1,5 +1,4 @@
 import colors from "../criteria/color.json"
-import fonts from '../criteria/font.json'
 import sf_font_json from '../criteria/fontSF.json'
 import rb_font_json from '../criteria/fontRB.json'
 import lf_font_json from '../criteria/fontLF.json'
@@ -11,19 +10,26 @@ figma.skipInvisibleInstanceChildren = true;
 figma.ui.resize(400, 600);
 
 // global variables
-let errorList: any = [];
-let idList: any = []
-let START: boolean = false;
-let font_lf: any = false;
-let font_sf: any = false;
-let font_rb: any = false;
+let colorErrorList: any = [];
+let fontErrorList: any = [];
 
+let allFonts: any = [sf_font_json,rb_font_json,lf_font_json];
+let SFRB: any = [sf_font_json,rb_font_json]
+let RBLF: any = [rb_font_json,lf_font_json]
+let SFLF: any = [sf_font_json,lf_font_json]
+
+let colorID: any = []
+let fontID: any =[]
+
+let START: boolean = false;
+
+let fontsList: any = [true, true, true]
 
 // universal function: on page edit, run universal checker
 figma.on("documentchange", () => {
   if (START) {
     for (const node of figma.currentPage.selection) {
-      if (idList.includes(node.id)) {
+      if (colorID.includes(node.id) || fontID.includes(node.id)) {
         check()
       }
     }
@@ -44,14 +50,9 @@ figma.ui.onmessage = (msg) => {
   }
 
   // font checkers
-  if (msg.type === 'lf') {
-    font_lf = !font_lf
-  }
-  if (msg.type === 'sf') {
-    font_sf = !font_sf
-  }
-  if (msg.type === 'rb') {
-    font_rb = !font_rb
+  if (msg.type === 'font') {
+    fontsList = msg.fontList
+    fontOnlyCheck()
   }
 };
 
@@ -59,35 +60,45 @@ figma.ui.onmessage = (msg) => {
 //  ********** Error Checker Feature ************
 //  *********************************************
 
-// traverse through the nodes & call error-checking functions
-function traverse(node: any) {
-  if ('children' in node) {
-    error_check(node)
-    for (const child of node.children) {
-      traverse(child);
-    }
-  } else {
-    error_check(node)
-  }
+// universal run function for checking for errors
+function check() {
+  colorErrorList = []
+  fontErrorList = []
+  colorID = []
+  fontID = []
+  traverse(figma.currentPage, 'all');
+  figma.ui.postMessage({color: colorErrorList, font: fontErrorList})
 }
 
 // universal run function for checking for errors
-function check() {
-  errorList = []
-  idList = []
-  traverse(figma.currentPage);
-  figma.ui.postMessage(errorList)
+function fontOnlyCheck() {
+  fontErrorList = []
+  fontID = []
+  traverse(figma.currentPage, 'font');
+  figma.ui.postMessage({color: colorErrorList, font: fontErrorList})
+}
+
+// traverse through the nodes & call error-checking functions
+function traverse(node: any, type: string) {
+  if ('children' in node) {
+    error_check(node, type)
+    for (const child of node.children) {
+      traverse(child, type);
+    }
+  } else {
+    error_check(node, type)
+  }
 }
 
 // helper function that combines the color & font checkers into one
-function error_check(node: any) {
-  if (typeof node.fills == "object") {
+function error_check(node: any, type: string) {
+  if (typeof node.fills == "object" && type == 'all') {
     is_wrong_color(node)
   }
   if (node.type == "TEXT") {
     is_wrong_font(node)
   }
-  if(node.strokes) {
+  if(node.strokes && type == 'all') {
     is_wrong_stroke(node)
   }
 }
@@ -108,8 +119,8 @@ function is_wrong_color(node: any) {
 
   // if the color is not matching, add it to the error-list
   if (result) {
-    errorList.push({ id: node.id, type: "Color", desc: "Fill color", name: node.name, status: false });
-    idList.push(node.id)
+    colorErrorList.push({ id: node.id, type: "Color", desc: "Fill color", name: node.name, status: false });
+    colorID.push(node.id)
   }
 }
 
@@ -129,8 +140,8 @@ function is_wrong_stroke(node: any) {
 
   // if the color is not matching, add it to the error-list
   if (result) {
-    errorList.push({ id: node.id, type: "Color",desc: "Stroke color", name: node.name, status: false });
-    idList.push(node.id)
+    colorErrorList.push({ id: node.id, type: "Color",desc: "Stroke color", name: node.name, status: false });
+    colorID.push(node.id)
   }
 }
 
@@ -158,19 +169,72 @@ function is_wrong_font(node: any) {
   // result variable
   let result = false
 
-  // go through fonts.json
-  fonts.font.forEach(element => {
+  if(fontsList[0] && fontsList[1] && fontsList[2]) {
+    allFonts.forEach(fonts => {
+      fonts.font.forEach(element => {
+        if (node.fontName.family == "Font Awesome 6 Pro" || (element.family == node.fontName.family && element.style == node.fontName.style && element.size == node.fontSize)) {
+          result = true
+        }
+      });
+    })
+  } else if (fontsList[0] && fontsList[1] && !fontsList[2]) {
+    SFLF.forEach(fonts => {
+      fonts.font.forEach(element => {
+        if (node.fontName.family == "Font Awesome 6 Pro" || (element.family == node.fontName.family && element.style == node.fontName.style && element.size == node.fontSize)) {
+          result = true
+        }
+      });
+    })
+  } else if (fontsList[0] && !fontsList[1] && !fontsList[2]) {
+  lf_font_json.font.forEach(element => {
     if (node.fontName.family == "Font Awesome 6 Pro" || (element.family == node.fontName.family && element.style == node.fontName.style && element.size == node.fontSize)) {
       result = true
     }
   });
+  } else if (fontsList[0] && !fontsList[1] && fontsList[2]) {
+    RBLF.forEach(fonts => {
+      fonts.font.forEach(element => {
+        if (node.fontName.family == "Font Awesome 6 Pro" || (element.family == node.fontName.family && element.style == node.fontName.style && element.size == node.fontSize)) {
+          result = true
+        }
+      });
+    })
+  } else if (!fontsList[0] && !fontsList[1] && fontsList[2]) {
+    rb_font_json.font.forEach(element => {
+      if (node.fontName.family == "Font Awesome 6 Pro" || (element.family == node.fontName.family && element.style == node.fontName.style && element.size == node.fontSize)) {
+        result = true
+      }
+    });
+  } else if (!fontsList[0] && fontsList[1] && fontsList[2]) {
+    SFRB.forEach(fonts => {
+      fonts.font.forEach(element => {
+        if (node.fontName.family == "Font Awesome 6 Pro" || (element.family == node.fontName.family && element.style == node.fontName.style && element.size == node.fontSize)) {
+          result = true
+        }
+      });
+    })
+  } else if (!fontsList[0] && fontsList[1] && !fontsList[2]) {
+    sf_font_json.font.forEach(element => {
+      if (node.fontName.family == "Font Awesome 6 Pro" || (element.family == node.fontName.family && element.style == node.fontName.style && element.size == node.fontSize)) {
+        result = true
+      }
+    });
+  } else if (!fontsList[0] && !fontsList[1] && !fontsList[2]) {
+    if (node.fontName.family == "Font Awesome 6 Pro") {
+      result = true
+    }
+  }
 
   // if the font is not matching, add it to the error-list
   if (!result) {
-    errorList.push({ id: node.id, type: "Font", desc: "Font", name: node.name, status: false });
-    idList.push(node.id)
+    let desc = node.fontName.family + ', ' + node.fontName.style + ", " + node.fontSize
+    fontErrorList.push({ id: node.id, type: "Font",desc: desc, name: node.name, status: false });
+    fontID.push(node.id)
   }
 }
+
+
+
 
 //  *************************************
 //  ********** Focus Feature ************

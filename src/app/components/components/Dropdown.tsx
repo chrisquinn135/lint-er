@@ -31,15 +31,22 @@ const Dropdown = () => {
         }
       }, [isOpen])
 
+      const options = ['Option 1', 'Option 2', 'Option 3'];
+      const handleChange = event => {
+        const selectedValue = event.target.value;
+        parent.postMessage({ pluginMessage: { type: 'selectedValue', value: selectedValue } }, '*');
+      };
 
 
     return (
     <div ref={ref}>
-        <div className='border-round flexbox--right dropdown'  onClick={onClick}>
+
+        <select className='border-round flexbox--right dropdown'  onClick={onClick}>
             <div>All Fonts</div>
             {isOpen ? <FontAwesomeIcon icon={faChevronUp} style={{color: "#6C6C70"}}/> : <FontAwesomeIcon icon={faChevronDown} style={{color: "#6C6C70"}}/>}
-        </div>
+        </select>
         {isOpen && <Menu/>}
+
     </div>)
 }
 

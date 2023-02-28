@@ -28,12 +28,6 @@ function App(props) {
       <TabBar/>
       {props.did_run ? <Error /> : <Default/>}
       <Footer/>
-      {/* <div className="footer">
-        <hr className="solid divider"/>
-        <div className="spacing-16">
-          <Button onClick={onClick}/>
-        </div>
-      </div> */}
     </div>
   );
 }

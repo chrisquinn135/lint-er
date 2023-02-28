@@ -7,7 +7,7 @@ const ErrorBox = (props) => {
 
   const dispatch = useDispatch();
   const onClick = () => {
-      dispatch(ignoreError(props.id))
+      dispatch(ignoreError({id:props.id, type: props.type}))
   }
 
   const focusError = () => {

@@ -1,13 +1,13 @@
 import React from 'react'
 import '../../styles/components.css'
-import MenuItem from './MenuItem'
+import Checkbox from './Checkbox'
 
 const Menu = () => {
   return (
     <div className='flexbox-stretch dropdown-menu'>
-        <MenuItem type='Libre Franklin'/>
-        <MenuItem type='SF Pro'/>
-        <MenuItem type='Roboto'/>
+        <Checkbox type='Libre Franklin'/>
+        <Checkbox type='SF Pro'/>
+        <Checkbox type='Roboto'/>
     </div>
   )
 }

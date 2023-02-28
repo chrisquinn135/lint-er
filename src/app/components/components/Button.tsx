@@ -3,7 +3,9 @@ import '../../styles/components.css'
 
 const Button = (props) => {
   return (
-    <div className="button text-md-med" onClick={props.onClick}>Run</div>
+    <div className={props.type == 'primary'? "button-primary text-md-med" : props.type == 'tertiary' ? "button-tertiary text-md-semibold" : ""} onClick={props.onClick}>
+      {props.title}
+    </div>
   )
 }
 
