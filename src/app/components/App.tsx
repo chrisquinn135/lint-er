@@ -1,4 +1,4 @@
-import React from 'react';
+import React , {useState} from 'react';
 import Footer from './Footer'
 import TabBar from './nav/TabBar'
 import '../styles/ui.css';
@@ -23,11 +23,17 @@ function App(props) {
     };
   }, []);
 
+  const onClick = () =>{
+    setDidRun(true)
+  }
+
+  const [didRun, setDidRun] = useState(false)
+
   return (
     <div>
       <TabBar/>
-      {props.did_run ? <Error /> : <Default/>}
-      <Footer/>
+      {didRun ? <Error /> : <Default/>}
+      <Footer test={onClick}/>
     </div>
   );
 }

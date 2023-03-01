@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef,useEffect } from 'react'
 import Button from './components/Button';
 import Setting from './components/Setting';
 import '../styles/ui.css';
@@ -8,26 +8,51 @@ import {currentState, updateError,ignore} from '../redux/slice/errorSlice'
 import {loadingStart, loadingEnd, setting} from '../redux/slice/navSlice'
 
 const Footer = (props) => {
+
+    const ref = useRef<HTMLInputElement>(null);
+
+    useEffect(() => {
+        const checkIfClickedOutside = e => {
+          // If the menu is open and the clicked target is not within the menu,
+          // then close the menu
+          if (props.setting && ref.current && !ref.current.contains(e.target)) {
+            dispatch(setting())
+          }
+        }
     
+        document.addEventListener("mousedown", checkIfClickedOutside)
+    
+        return () => {
+          // Cleanup the event listener
+          document.removeEventListener("mousedown", checkIfClickedOutside)
+        }
+      }, [props.setting])
+
     const dispatch = useDispatch();
 
     const onRun = () => {
-        const count = 5;
         parent.postMessage({
             pluginMessage: {
-                type: 'run',
-                count
+                type: 'run'
             }
         }, '*');
     };
 
     const onClick = () => {
-        onRun();
-        dispatch(loadingStart());
+        props.test()
         dispatch(currentState());
+        if(props.setting) {
+            dispatch(setting())
+        }
+        dispatch(loadingStart());
+        setTimeout(() => {
+            // Execute the callback function after the timeout
+            onRun();
+        }, 109);
     }
 
     const ignoreClick = () => {
+        dispatch(setting())
         dispatch(ignore())
     }
 
@@ -42,13 +67,12 @@ const Footer = (props) => {
         };
     }, []);
 
-    return (<div className="footer">
-        <hr className="solid divider"/>
-        {props.setting && <Setting />}
-        {props.setting && <hr className='setting' style={{marginLeft: '16px', marginRight: '16px'}} />}
+    return (<div className="footer" ref={ref}>
+        <Setting isVisible={props.setting}/>
+        {/* {props.setting && <Setting isVisible={props.setting}/>} */}
         <div className="spacing-16 footer-contents">
             <Button onClick={ignoreClick} title={'Reset Ignore'} type={'tertiary'}/>
-            <Button onClick={settingClick} title={'Settings'} type={'tertiary'}/>
+            <Button onClick={settingClick} title={'Settings'} type={props.setting ? 'tertiary-on' : 'tertiary'}/>
             <Button onClick={onClick} title={'Run'} type={'primary'}/>
         </div>
     </div>)
