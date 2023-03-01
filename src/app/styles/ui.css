@@ -34,13 +34,13 @@ body {
 }
 
 /* List */
-ol {
-  margin: 0px 32px;
-  padding-inline-start: 16px;
+ul {
+  margin: 0px 24px;
+  padding-inline-start: 8px;
 }
 
-ol li {
-  margin: 4px;
+ul li {
+  margin: 8px;
 }
 
 /* Dividers */
