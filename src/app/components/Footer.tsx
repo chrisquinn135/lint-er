@@ -39,7 +39,6 @@ const Footer = (props) => {
     };
 
     const onClick = () => {
-        props.test()
         dispatch(currentState());
         if(props.setting) {
             dispatch(setting())
