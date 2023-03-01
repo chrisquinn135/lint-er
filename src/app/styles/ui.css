@@ -2,7 +2,7 @@
 
 /* Body Structures */
 body {
-  font: 12px 'Libre Franklin';
+  font: 12px 'Libre Franklin', 'cursive';
   font-family: 'Libre Franklin', 'cursive';
   text-align: center;
   margin: 0;
@@ -24,7 +24,7 @@ body {
   flex-direction: row;
   justify-content: right;
   align-items: center;
-  gap: 16px;
+  gap: 24px;
 }
 
 .body {
@@ -111,6 +111,15 @@ hr.setting {
   justify-content: space-between;
   text-align: left;
   align-items:start;
+  gap: 8px;
+}
+
+.flexbox--right-center {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  text-align: left;
+  align-items:center;
   gap: 8px;
 }
 

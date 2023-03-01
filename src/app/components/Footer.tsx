@@ -51,7 +51,9 @@ const Footer = (props) => {
     }
 
     const ignoreClick = () => {
-        dispatch(setting())
+        if(props.setting) {
+            dispatch(setting())
+        }
         dispatch(ignore())
     }
 
@@ -70,9 +72,9 @@ const Footer = (props) => {
         <Setting isVisible={props.setting}/>
         {/* {props.setting && <Setting isVisible={props.setting}/>} */}
         <div className="spacing-16 footer-contents">
-            <Button onClick={ignoreClick} title={'Reset Ignore'} type={'tertiary'}/>
+            <Button onClick={ignoreClick} title={'Clear Ignore'} type={'tertiary'}/>
             <Button onClick={settingClick} title={'Settings'} type={props.setting ? 'tertiary-on' : 'tertiary'}/>
-            <Button onClick={onClick} title={'Run'} type={'primary'}/>
+            <Button onClick={onClick} title={'Run Lint'} type={'primary'}/>
         </div>
     </div>)
 }
