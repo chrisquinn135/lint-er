@@ -24,7 +24,7 @@ let fontID: any = []
 
 let START: boolean = false;
 
-let fontsList: any = [true, true, true]
+let fontsList: any = [true, false, false]
 
 // universal function: on page edit, run universal checker
 figma.on("documentchange", () => {

@@ -2,7 +2,7 @@ import { createSlice } from '@reduxjs/toolkit'
 
 const fontSlice = createSlice({
   name: 'font',
-  initialState: {sf: true, rb: true, lf: true, mixed: false},
+  initialState: {sf: false, rb: false, lf: true, mixed: false},
   reducers: {
     sf(state, action) {
       state.sf = !state.sf
