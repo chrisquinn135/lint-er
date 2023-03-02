@@ -32,7 +32,7 @@ const Setting = ({ isVisible }) => {
         </div>
         <hr className="setting" />
         <div className='flexbox--right-center'>
-        Hide Hidden Layers
+        Allow Hidden Layers
           <Checkbox type='Hidden' />
         </div>
       </div>

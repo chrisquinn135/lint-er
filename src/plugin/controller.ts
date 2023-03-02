@@ -112,29 +112,28 @@ function fontOnlyCheck() {
 
 // traverse through the nodes & call error-checking functions
 function traverse(node: any, type: string) {
-  console.log(node)
-  if ('children' in node) {
-    error_check(node, type)
-    for (const child of node.children) {
-      traverse(child, type);
+  if ((typeof node.visible === 'undefined') || (!visible || node.visible)) {
+    if ('children' in node) {
+      error_check(node, type)
+      for (const child of node.children) {
+        traverse(child, type);
+      }
+    } else {
+      error_check(node, type)
     }
-  } else {
-    error_check(node, type)
   }
 }
 
 // helper function that combines the color & font checkers into one
 function error_check(node: any, type: string) {
-  if(!visible || node.visible) {
-    if (typeof node.fills == "object" && type == 'all') {
-      is_wrong_color(node)
-    }
-    if (node.type == "TEXT") {
-      is_wrong_font(node)
-    }
-    if (node.strokes && type == 'all') {
-      is_wrong_stroke(node)
-    }
+  if (typeof node.fills == "object" && type == 'all') {
+    is_wrong_color(node)
+  }
+  if (node.type == "TEXT") {
+    is_wrong_font(node)
+  }
+  if (node.strokes && type == 'all') {
+    is_wrong_stroke(node)
   }
 }
 
@@ -145,7 +144,7 @@ function is_wrong_color(node: any) {
   let result = false
 
   node.fills.forEach(fill => {
-    if (fill.type == "SOLID") {
+    if (fill.type == "SOLID" && (!visible || fill.visible)) {
       if (!color_helper(fill.color)) {
         result = true
       }
@@ -166,7 +165,7 @@ function is_wrong_stroke(node: any) {
   let result = false
 
   node.strokes.forEach(stroke => {
-    if (stroke.type == "SOLID") {
+    if (stroke.type == "SOLID" && (!visible || stroke.visible)) {
       if (!color_helper(stroke.color)) {
         result = true
       }
