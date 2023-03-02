@@ -10,25 +10,30 @@ const Setting = ({ isVisible }) => {
       {/* <div className='text-sm-med' style={{marginBottom:'8px'}}>Font Settings</div> */}
       <div className='spacing-16 setting-font' style={{marginTop:'8px'}}>
         <div className='flexbox--right-center'>
-          Libre Franklin
+        Allow Libre Franklin
           <Checkbox type='Libre Franklin' />
 
         </div>
         <hr className="setting" />
         <div className='flexbox--right-center'>
-          SF Pro
+        Allow SF Pro
           <Checkbox type='SF Pro' />
 
         </div>
         <hr className="setting" />
         <div className='flexbox--right-center'>
-          Roboto
+          Allow Roboto
           <Checkbox type='Roboto' />
         </div>
         <hr className="setting" />
         <div className='flexbox--right-center'>
-          Mixed
+        Allow Mixed Font Styles
           <Checkbox type='Mixed' />
+        </div>
+        <hr className="setting" />
+        <div className='flexbox--right-center'>
+        Hide Hidden Layers
+          <Checkbox type='Hidden' />
         </div>
       </div>
     </div>

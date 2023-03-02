@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import '../../styles/components.css'
 import { connect } from 'react-redux'
-import { sf, rb, lf,mixed } from '../../redux/slice/fontSlice'
+import { sf, rb, lf,mixed,hidden } from '../../redux/slice/fontSlice'
 import { useDispatch } from 'react-redux'
 
 const Checkbox = (props) => {
@@ -17,8 +17,10 @@ const Checkbox = (props) => {
             dispatch(sf())
         } else if (props.type == 'Roboto') {
             dispatch(rb())
-        } else {
+        } else if (props.type == 'Mixed') {
             dispatch(mixed())
+        } else {
+            dispatch(hidden())
         }
     }
 
@@ -29,17 +31,15 @@ const Checkbox = (props) => {
             setCheck(props.sf)
         } else if (props.type == 'Roboto') {
             setCheck(props.rb)
-        } else {
+        } else if (props.type == 'Mixed') {
             setCheck(props.mixed)
+        } else if (props.type == 'Hidden') {
+            setCheck(props.hidden)
         }
-    }, [props.sf, props.rb, props.lf, props.mixed]);
+    }, [props.sf, props.rb, props.lf, props.mixed, props.hidden]);
 
     return (
         <div>
-            {/* <span onClick={onClick} className={isCheck ? "checkmark-active" : "checkmark"}
-            >
-                {isCheck ? <FontAwesomeIcon icon={faCheck} /> : ""}
-            </span> */}
             <div className={`toggle ${isCheck ? "active" : ""}`} onClick={onClick}>
                  <div className="toggle-handle"></div>
              </div>
@@ -50,7 +50,7 @@ const Checkbox = (props) => {
 
 
 const mapStateToProps = (state) => {
-    return { sf: state.font.sf, lf: state.font.lf, rb: state.font.rb, mixed: state.font.mixed }
+    return { sf: state.font.sf, lf: state.font.lf, rb: state.font.rb, mixed: state.font.mixed, hidden: state.font.hidden }
 }
 
 export default connect(mapStateToProps)(Checkbox)

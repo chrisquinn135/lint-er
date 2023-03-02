@@ -17,7 +17,8 @@ let allFonts: any = [sf_font_json, rb_font_json, lf_font_json];
 let SFRB: any = [sf_font_json, rb_font_json]
 let RBLF: any = [rb_font_json, lf_font_json]
 let SFLF: any = [sf_font_json, lf_font_json]
-let mixed: boolean = false;
+let mixed: boolean = true;
+let visible: boolean = true;
 
 let colorID: any = []
 let fontID: any = []
@@ -78,6 +79,13 @@ figma.ui.onmessage = (msg) => {
       fontOnlyCheck()
     }
   }
+
+  if (msg.type === 'hidden') {
+    visible = msg.hidden
+    if (START) {
+      check();
+    }
+  }
 };
 
 //  *********************************************
@@ -104,6 +112,7 @@ function fontOnlyCheck() {
 
 // traverse through the nodes & call error-checking functions
 function traverse(node: any, type: string) {
+  console.log(node)
   if ('children' in node) {
     error_check(node, type)
     for (const child of node.children) {
@@ -116,14 +125,16 @@ function traverse(node: any, type: string) {
 
 // helper function that combines the color & font checkers into one
 function error_check(node: any, type: string) {
-  if (typeof node.fills == "object" && type == 'all') {
-    is_wrong_color(node)
-  }
-  if (node.type == "TEXT") {
-    is_wrong_font(node)
-  }
-  if (node.strokes && type == 'all') {
-    is_wrong_stroke(node)
+  if(!visible || node.visible) {
+    if (typeof node.fills == "object" && type == 'all') {
+      is_wrong_color(node)
+    }
+    if (node.type == "TEXT") {
+      is_wrong_font(node)
+    }
+    if (node.strokes && type == 'all') {
+      is_wrong_stroke(node)
+    }
   }
 }
 
@@ -190,7 +201,8 @@ function color_helper(object2) {
 // font error -> error list function
 function is_wrong_font(node: any) {
   if (node.fontName === figma.mixed || node.fontSize === figma.mixed) {
-    if (mixed) {
+    console.log(mixed)
+    if (!mixed) {
       fontErrorList.push({ id: node.id, type: "Font", desc: "Mixed font", name: node.name, status: false });
       fontID.push(node.id)
     }
